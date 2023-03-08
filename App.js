@@ -1,26 +1,30 @@
 
-import {Text, View } from 'react-native';
+import {Text, View, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import loginScreen from './src/screens/loginScreen';
 import signUpScreen from './src/screens/signUpScreen';
-const stack = createNativeStackNavigator();
+
+import ListItem from './src/components/chatListItem';
+
+
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <stack.Navigator>
-        <stack.Screen
-        name = "loginScreen"
-        component = {loginScreen}
-        options = {{headerShown: false}} />
-        <stack.Screen
-        name = "signUpScreen"
-        component={signUpScreen} />
-      </stack.Navigator>
-    </NavigationContainer>
+    <View style = {styles.container}>
+          <ListItem />
+          <ListItem />
+    </View>
+
   );
 }
 
+const styles = StyleSheet.create({
+  container:{
+    backgroundColor:"black",
+    flex:1
+    
+  },
+})
 
