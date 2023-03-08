@@ -3,18 +3,16 @@ import {Text, View, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import loginScreen from './src/screens/loginScreen';
-import signUpScreen from './src/screens/signUpScreen';
-
-import ListItem from './src/components/chatListItem';
+import LoginScreen from './src/screens/loginScreen';
+import SignUpScreen from './src/screens/signUpScreen';
+import ChatScreen from './src/screens/chatScreen';
 
 
 
 export default function App() {
   return (
     <View style = {styles.container}>
-          <ListItem />
-          <ListItem />
+      <ChatScreen />
     </View>
 
   );
@@ -23,7 +21,8 @@ export default function App() {
 const styles = StyleSheet.create({
   container:{
     backgroundColor:"black",
-    flex:1
+    flex:1,
+
     
   },
 })
