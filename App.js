@@ -6,13 +6,13 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import LoginScreen from './src/screens/loginScreen';
 import SignUpScreen from './src/screens/signUpScreen';
 import ChatScreen from './src/screens/chatScreen';
-
+import TextScreen from './src/screens/textScreen';
 
 
 export default function App() {
   return (
     <View style = {styles.container}>
-      <ChatScreen />
+      <TextScreen />
     </View>
 
   );
@@ -20,7 +20,7 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container:{
-    backgroundColor:"black",
+
     flex:1,
 
     
