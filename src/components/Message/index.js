@@ -24,7 +24,15 @@ const styles = StyleSheet.create({
         padding:10,
         maxWidth:"80%",
         borderRadius:10,
-        alignSelf:"flex-end"
+        alignSelf:"flex-end",
+        shadowColor: "#000000",
+        shadowOffset: {
+        width: 0,
+        height: 3,
+        },
+        shadowOpacity:  0.18,
+        shadowRadius: 4.59,
+        elevation: 5
     },
     text:{},
     time:{
