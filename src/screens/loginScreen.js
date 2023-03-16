@@ -1,6 +1,5 @@
 import React from "react";
 import {Text, View, Button} from 'react-native';
-import ListItem from "../components/chatListItem";
 
 
 export default function LoginScreen ({navigation}) {
@@ -11,7 +10,6 @@ export default function LoginScreen ({navigation}) {
             title = "sign Up" 
             onPress = {() => navigation.navigate('signUpScreen')}
             />
-            <ListItem />
         </View>
     );
 }

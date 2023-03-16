@@ -4,8 +4,11 @@ import { useState } from "react";
 
 
 export default function Inputbox() {
+    const [message, setMessage] = useState('Hello');
     const sendMessage = () =>{
-        console.warn("message Sent")
+        console.warn("message Sent", message)
+
+        setMessage('');
     }
 
     return(
@@ -20,6 +23,8 @@ export default function Inputbox() {
             style = {styles.input}
             placeholderTextColor={"white"}
             placeholder="Enter Your Message.. "
+            value = {message}
+            onChangeText = {setMessage}
             />
             <MaterialIcons 
             style = {styles.send}

@@ -1,4 +1,3 @@
-
 import {Text, View, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -12,7 +11,7 @@ import TextScreen from './src/screens/textScreen';
 export default function App() {
   return (
     <View style = {styles.container}>
-      <TextScreen />
+      <LoginScreen />
     </View>
 
   );
@@ -21,6 +20,8 @@ export default function App() {
 const styles = StyleSheet.create({
   container:{
     flex:1,
+    backgroundColor: "black",
   },
+  
 })
 
