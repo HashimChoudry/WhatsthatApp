@@ -7,11 +7,14 @@ import SignUpScreen from './src/screens/signUpScreen';
 import ChatScreen from './src/screens/chatScreen';
 import TextScreen from './src/screens/textScreen';
 
+import Navigator from './src/navigation';
+
+
 
 export default function App() {
   return (
     <View style = {styles.container}>
-      <LoginScreen />
+      <Navigator/>
     </View>
 
   );
@@ -19,8 +22,7 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container:{
-    flex:1,
-    backgroundColor: "black",
+    flex:1,    
   },
   
 })

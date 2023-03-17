@@ -5,7 +5,7 @@ import chats from '../../assets/data/chats.json'
 
 export default function ChatScreen (){
     return(
-        <FlatList 
+        <FlatList style= {{backgroundColor: "black"}}
         data = {chats}
         renderItem = {({item}) => <ListItem chat = {item} />}
         />

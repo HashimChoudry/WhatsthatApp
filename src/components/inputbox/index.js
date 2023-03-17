@@ -4,7 +4,7 @@ import { useState } from "react";
 
 
 export default function Inputbox() {
-    const [message, setMessage] = useState('Hello');
+    const [message, setMessage] = useState('');
     const sendMessage = () =>{
         console.warn("message Sent", message)
 
