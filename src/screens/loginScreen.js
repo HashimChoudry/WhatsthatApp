@@ -10,44 +10,47 @@ export default function LoginScreen () {
     const [password,setPassword] = useState('')
     const navigation = useNavigation();
 
-    const sendEmail = () =>{
-        console.warn("message Sent", email)
-
-        setEmail('');
+    const sendData = () =>{
+        console.warn([email,password])
+        setEmail("")
+        setPassword("")
     }
-    const sendPassword = () =>{
-        console.warn("message Sent", password)
 
-        setPassword('');
-    }
 
     return(
         <View style= {styles.container}>
-            <Text style= {{padding:10}}>Login</Text>
-            <TextInput
-                style = { styles.input} 
-                placeholder = {"Email"} 
-                placeholderTextColor= "grey"
-                value ={email}
-                onChangeText = {setEmail}
-            />
+            <View>
 
-            <TextInput 
-                style= {styles.input} 
-                placeholder = {"Password"} 
-                placeholderTextColor = "grey"
-                value = {password}
-                onChangeText = {setPassword}
-                secureTextEntry
-            />
+                <TextInput
+                    style = { styles.input} 
+                    placeholder = {"Email"} 
+                    placeholderTextColor= "grey"
+                    value ={email}
+                    onChangeText = {(text) => setEmail(text)}
+                />
 
-            <TouchableOpacity style = {styles.buttonContainer} onPress={sendEmail}>
-                <Text>Log In</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
-                <Text style = {{color: "grey"}}>Sign Up</Text>
-            </TouchableOpacity>
+                <TextInput 
+                    style= {styles.input} 
+                    placeholder = {"Password"} 
+                    placeholderTextColor = "grey"
+                    value = {password}
+                    onChangeText = {(text) => setPassword(text)}
+                    secureTextEntry
+                />
+
+                <TouchableOpacity style = {styles.buttonContainer} onPress={navigation.navigate('Chat')}>
+                    <Text style = {{color:'white'}}>Log In</Text>
+                </TouchableOpacity>   
+
+                <View style={{flexDirection:'row',marginTop:20}} m>
+                    <Text>Dont have an account </Text>
+                    <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
+                        <Text style={styles.link}>Sign Up</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>        
         </View>
+        
         
     );
 }
@@ -55,11 +58,13 @@ export default function LoginScreen () {
 const styles = StyleSheet.create({
     container: {
         flex:1,
-        backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'center',
 
        },
+    wrapper: {
+        width:'80%',
+    },
     input: {
         fontSize: 15,
         borderRadius: 50,
@@ -67,7 +72,10 @@ const styles = StyleSheet.create({
         padding:10,
         marginBottom:5,
         height:10,
-        borderColor: "gray",
+        borderColor: "lightgray",
+    },
+    link: {
+        color:'blue',
     },
     buttonContainer: {
         alignItems:"center",
