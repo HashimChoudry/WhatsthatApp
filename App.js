@@ -10,11 +10,11 @@ import TextScreen from './src/screens/textScreen';
 import Navigator from './src/navigation';
 
 
-
 export default function App() {
   return (
     <View style = {styles.container}>
-      <Navigator/>
+      <Navigator></Navigator>
+
     </View>
 
   );

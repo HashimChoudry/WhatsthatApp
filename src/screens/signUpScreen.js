@@ -5,13 +5,52 @@ import { useState } from "react";
 
 export default function SignUpScreen () {
     const navigation = useNavigation();
-    const [fname,SetFname] = useState('')
+
+    const [fname,SetFname] = useState("")
     const [sname,setSname] = useState('')
     const [email,setEmail] = useState('')
     const [password,setPassword] = useState('')
 
     const sendData = () => {
-        console.warn([fname,sname,email,password])
+        
+    }
+
+    const sign_up = () => {
+        let to_send = {
+            "first_name":fname,
+            "last_name":sname,
+            "email":email,
+            "password":password,
+        }
+
+        // SetFname('')
+        // setSname('')
+        // setEmail('')
+        // setPassword('')
+        console.warn(JSON.stringify(to_send))
+        return fetch("http://localhost:3333/api/1.0.0/user", {
+            method:'post',
+            headers:{
+                'Content-Type':'application/json'
+            },
+            body:(JSON.stringify(to_send))
+        })
+        .then((Response) => {
+            if(Response.status == 201){
+                return Response.json()
+            }else if (Response.status == 400){
+                throw'failed validation'
+            }else{
+                throw'something went wrong'
+            }
+        })
+        .then((responseJson) => {
+            console.log("user created with ID: " , responseJson);
+            navigation.navigate('Login')
+        })
+        .catch((error) => {
+            console.log(error);
+        })
     }
     
     return(      
@@ -23,7 +62,7 @@ export default function SignUpScreen () {
                 placeholder ="First Name... "
                 placeholderTextColor = "grey"
                 value = {fname}
-                onChangeText={(text) => SetFname(text)}               
+                onChangeText= {SetFname}              
                 />
 
                 <TextInput 
@@ -31,7 +70,7 @@ export default function SignUpScreen () {
                 placeholder = "Second Name... "
                 placeholderTextColor = "grey"
                 value = {sname}
-                onChangeText={(text) => setSname(text)}               
+                onChangeText= {setSname}               
                 />
 
                 <TextInput 
@@ -39,7 +78,7 @@ export default function SignUpScreen () {
                 placeholder = "E-mail... "
                 placeholderTextColor = "grey"
                 value = {email}
-                onChangeText={(text) => setEmail(text)}              
+                onChangeText= {setEmail}            
                 />
 
                 <TextInput 
@@ -47,14 +86,14 @@ export default function SignUpScreen () {
                 placeholder = "Password... "
                 placeholderTextColor = "grey"
                 value = {password}
-                onChangeText={(text) => setPassword(text)}   
+                onChangeText= {setPassword} 
                 />
 
-                <TouchableOpacity style = {styles.buttonContainer} onPress = {sendData}>
+                <TouchableOpacity style = {styles.buttonContainer} onPress = {sign_up}>
                     <Text style={{color:'white'}}>Sign Up</Text>
                 </TouchableOpacity>
 
-                <View style= {{flexDirection:'row'}}>
+                <View style= {{flexDirection:'row', marginTop:20}}>
                     <Text>Already Have an account? </Text>
                     <TouchableOpacity onPress={() => navigation.navigate('Login')}>
                         <Text style = {styles.link}>Login</Text>

@@ -3,17 +3,29 @@ import {Text, View, Button, TextInput, StyleSheet, TouchableOpacity, Pressable, 
 import { useNavigation } from "@react-navigation/native";
 import DarkBG from "../../assets/images/DarkBG.png"
 import { useState } from "react";
-
+import { Validator } from "react";
 
 export default function LoginScreen () {
-    const [email,setEmail] = useState('')
-    const [password,setPassword] = useState('')
+    const [email,setEmail] = useState('');
+    const [password,setPassword] = useState('');
+
+
+
     const navigation = useNavigation();
+    const validator = require('validator');
+
 
     const sendData = () =>{
-        console.warn([email,password])
-        setEmail("")
-        setPassword("")
+        console.warn(validator.isEmail(email));
+
+        let to_send ={
+            "email":email,
+            "password":password,
+        }
+        console.warn(JSON.stringify(to_send));
+        
+        setEmail("");
+        setPassword("");
     }
 
 
@@ -38,7 +50,7 @@ export default function LoginScreen () {
                     secureTextEntry
                 />
 
-                <TouchableOpacity style = {styles.buttonContainer} onPress={navigation.navigate('Chat')}>
+                <TouchableOpacity style = {styles.buttonContainer} onPress={sendData}>
                     <Text style = {{color:'white'}}>Log In</Text>
                 </TouchableOpacity>   
 
