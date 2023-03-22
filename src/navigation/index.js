@@ -38,7 +38,10 @@ export default function Navigator() {
               headerTitleAlign:"center",
               headerStyle:{backgroundColor:"black"},
               headerTitleStyle:{color:"white"},
-              headerShadowVisible:false}}/>
+              headerShadowVisible:false,
+              headerLeft:null,
+              }}/>
+              
             <stack.Screen 
             name = 'Text' 
             component={textScreen} 
@@ -46,7 +49,9 @@ export default function Navigator() {
               headerTitleAlign:"center",
               headerStyle:{backgroundColor:"black"},
               headerTitleStyle:{color:"white"},
-              headerShadowVisible:false}}/>
+              headerShadowVisible:false,
+              headerTintColor:"white",
+              }}/>
         </stack.Navigator>
     </NavigationContainer>
   )

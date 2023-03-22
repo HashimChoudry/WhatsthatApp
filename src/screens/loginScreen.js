@@ -4,6 +4,8 @@ import { useNavigation } from "@react-navigation/native";
 import DarkBG from "../../assets/images/DarkBG.png"
 import { useState } from "react";
 import { Validator } from "react";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 export default function LoginScreen () {
     const [email,setEmail] = useState('');
@@ -23,10 +25,50 @@ export default function LoginScreen () {
             "password":password,
         }
         console.warn(JSON.stringify(to_send));
-        
+
         setEmail("");
         setPassword("");
     }
+
+    const Login = () =>{
+        let to_send ={
+            "email":email,
+            "password":password,
+        }
+        console.warn(JSON.stringify(to_send));
+
+        return fetch("http://localhost:3333/api/1.0.0/login",{
+            method:'post',
+            headers:{
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify(to_send)
+        })
+        .then((response) => {
+            if (response.status === 200){
+                return response.json();
+            }else if (response === 400){
+                throw 'invalid password or email';
+            }else{
+                throw 'something went wrong';
+            }
+        })
+        .then(async (responseJson) =>{
+            console.log(responseJson);
+            try{
+                await AsyncStorage.setItem('whatsthat_user_id', responseJson.id)
+                await AsyncStorage.setItem('whatsthat_session_token', responseJson.token);
+                navigation.navigate('Chat')
+            }catch{
+                throw 'something went wrong'
+            }
+
+        })
+        .catch ((error) => {
+            console.log(error)
+        })
+    }
+
 
 
     return(
@@ -50,7 +92,7 @@ export default function LoginScreen () {
                     secureTextEntry
                 />
 
-                <TouchableOpacity style = {styles.buttonContainer} onPress={sendData}>
+                <TouchableOpacity style = {styles.buttonContainer} onPress={Login}>
                     <Text style = {{color:'white'}}>Log In</Text>
                 </TouchableOpacity>   
 
