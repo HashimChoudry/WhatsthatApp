@@ -4,7 +4,7 @@ import chats from '../../assets/data/chats.json'
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Component } from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function ChatScreen (){
     const navigation = useNavigation();
@@ -32,7 +32,6 @@ export default function ChatScreen (){
             (error) => console.log(error)
         )
     } 
-
     
     const checkLoggedIn = async() => {
         const value = await AsyncStorage.getItem('whatsthat_session_token')

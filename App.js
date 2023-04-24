@@ -9,7 +9,7 @@ import TextScreen from './src/screens/textScreen';
 import contactsScreen from "./src/screens/contactsScreen";
 import ProfileScreen from "./src/screens/profileScreen";
 
-import Navigator from './src/navigation/index/'
+import Navigator from './src/navigation';
 
 
 export default function App() {

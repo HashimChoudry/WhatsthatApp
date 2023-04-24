@@ -63,7 +63,6 @@ export default function LoginScreen () {
             }
         })
         .then(async (responseJson) =>{
-            console.log(responseJson);
             try{
                 await AsyncStorage.setItem('whatsthat_user_id', responseJson.id)
                 await AsyncStorage.setItem('whatsthat_session_token', responseJson.token);              
