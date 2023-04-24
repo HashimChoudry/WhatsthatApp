@@ -4,18 +4,27 @@ import React from 'react'
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import chatScreen from '../screens/chatScreen';
-import textScreen from '../screens/textScreen';
+import TabNavigator from './TabNavigator'
+
+import ChatScreen from '../screens/chatScreen';
+import TextScreen from '../screens/textScreen';
 import LoginScreen from '../screens/loginScreen';
 import SignUpScreen from '../screens/signUpScreen';
 
 const stack = createNativeStackNavigator(
     );
 
-export default function Navigator() {
+const Navigator =() =>{
   return (
-    <NavigationContainer > 
-        <stack.Navigator>
+    <NavigationContainer> 
+        <stack.Navigator initialRouteName="Login">
+            <stack.Screen 
+            name = 'main'
+            component = {TabNavigator}
+            options = {{
+              headerShown:false,
+            }}
+            />
             <stack.Screen 
             name = 'Login' 
             component={LoginScreen} 
@@ -29,22 +38,10 @@ export default function Navigator() {
             options ={{
               
             }}
-            />
-            <stack.Screen 
-            name = 'Chat' 
-            component={chatScreen} 
-            options={{
-              title: "Chats", 
-              headerTitleAlign:"center",
-              headerStyle:{backgroundColor:"black"},
-              headerTitleStyle:{color:"white"},
-              headerShadowVisible:false,
-              headerLeft:null,
-              }}/>
-              
+            />                      
             <stack.Screen 
             name = 'Text' 
-            component={textScreen} 
+            component={TextScreen} 
             options={{ 
               headerTitleAlign:"center",
               headerStyle:{backgroundColor:"black"},
@@ -56,3 +53,5 @@ export default function Navigator() {
     </NavigationContainer>
   )
 }
+
+export default Navigator;

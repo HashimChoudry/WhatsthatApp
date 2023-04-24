@@ -11,10 +11,6 @@ export default function SignUpScreen () {
     const [email,setEmail] = useState('')
     const [password,setPassword] = useState('')
 
-    const sendData = () => {
-        
-    }
-
     const sign_up = () => {
         let to_send = {
             "first_name":fname,
@@ -22,11 +18,11 @@ export default function SignUpScreen () {
             "email":email,
             "password":password,
         }
-
-        // SetFname('')
-        // setSname('')
-        // setEmail('')
-        // setPassword('')
+        
+        SetFname('')
+        setSname('')
+        setEmail('')
+        setPassword('')
         console.warn(JSON.stringify(to_send))
         return fetch("http://localhost:3333/api/1.0.0/user", {
             method:'post',

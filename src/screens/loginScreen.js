@@ -13,9 +13,16 @@ export default function LoginScreen () {
 
 
 
+
     const navigation = useNavigation();
     const validator = require('validator');
 
+    const checkLoggedIn = async() => {
+        const value = await AsyncStorage.getItem('whatsthat_session_token')
+        if (value != null){
+            navigation.navigate('main')
+        }
+    }
 
     const sendData = () =>{
         console.warn(validator.isEmail(email));
@@ -49,16 +56,18 @@ export default function LoginScreen () {
                 return response.json();
             }else if (response === 400){
                 throw 'invalid password or email';
-            }else{
-                throw 'something went wrong';
+            }else if (response === 500){
+                throw 'Server Error';
+            }else {
+                throw 'something went wrong'
             }
         })
         .then(async (responseJson) =>{
             console.log(responseJson);
             try{
                 await AsyncStorage.setItem('whatsthat_user_id', responseJson.id)
-                await AsyncStorage.setItem('whatsthat_session_token', responseJson.token);
-                navigation.navigate('Chat')
+                await AsyncStorage.setItem('whatsthat_session_token', responseJson.token);              
+                navigation.navigate('main')
             }catch{
                 throw 'something went wrong'
             }
@@ -67,13 +76,15 @@ export default function LoginScreen () {
         .catch ((error) => {
             console.log(error)
         })
+
     }
 
 
-
+    checkLoggedIn();
     return(
         <View style= {styles.container}>
             <View>
+                
 
                 <TextInput
                     style = { styles.input} 
