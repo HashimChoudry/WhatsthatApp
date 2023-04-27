@@ -1,6 +1,7 @@
 import { Text, View, Image, StyleSheet, Pressable, FlatList} from "react-native";
-import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
+import React from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ContactsItem from "../components/contactsListItem";
 
@@ -8,7 +9,7 @@ import ContactsItem from "../components/contactsListItem";
 export default function ContactsScreen() {
     const [userData, setUserData] = useState('')
     const [token, setToken] = useState("")
-    const [userID, setUserID] = useState()
+
 
     const LoadTokenID = () =>{
         AsyncStorage.getItem('whatsthat_session_token').then(data => {
@@ -18,16 +19,9 @@ export default function ContactsScreen() {
         }).catch(
             (error) => console.log(error)
         )
-        AsyncStorage.getItem('whatsthat_user_id').then(data => {
-            if(data !== null){
-                setUserID(data)
-            }
-        }).catch(
-            (error) => console.log(error)
-        )
     } 
 
-    const loadContacts = (searchInp) => {
+    const loadContacts = () => {
         return fetch('http://localhost:3333/api/1.0.0/contacts',{
       method:'get',
       headers:{
@@ -58,9 +52,12 @@ export default function ContactsScreen() {
         LoadTokenID()
       },[])
 
-    useEffect(() => {
+
+    useFocusEffect(
+      React.useCallback(() => {
         loadContacts();
-    },[token])
+      },[token])
+      )
 
     return (
         <FlatList style = {{backgroundColor: 'black'}}

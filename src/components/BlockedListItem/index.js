@@ -11,12 +11,12 @@ const setUserID = async (userID) => {
     }
 }
 
-const ContactsItem = ({contact}) => {
+const BlockedItem = ({contact}) => {
     const navigation = useNavigation();
 
     const pressContact = () => {
         setUserID(contact.user_id);
-        navigation.navigate("Contact Profile")
+        navigation.navigate("Blocked Profile")
     }
 
     return (
@@ -61,6 +61,6 @@ const ContactsItem = ({contact}) => {
       },
     });
 
-export default ContactsItem
+export default BlockedItem
 
   

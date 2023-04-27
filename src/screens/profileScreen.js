@@ -1,7 +1,8 @@
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { useState } from "react";
 import { useEffect } from "react";
-import { useNavigation } from "@react-navigation/native";
+import React from "react";
+import { useFocusEffect,useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
@@ -56,7 +57,6 @@ export default function ProfileScreen() {
     })
     .then((rblob) => {
       let data = URL.createObjectURL(rblob)
-      console.warn(data)
       setPhoto(data)
       console.log("photo recieved")
     })
@@ -139,12 +139,17 @@ export default function ProfileScreen() {
     LoadTokenID();    
   },[])
 
-  useEffect(() =>{
-    loadUserPhoto();
-    loadUserData();
-    console.log(userID);
-    console.log(token);
-  },[userID])
+
+  useFocusEffect(
+    React.useCallback(() => {
+      loadUserPhoto();
+      loadUserData();
+
+    },[token])
+    )
+
+    
+  
 
 
   return (
@@ -155,14 +160,18 @@ export default function ProfileScreen() {
           source={{ uri: photo }} 
         />
       </View>
-      <View style={styles.infoContainer}>
+      <View style={styles.profileContainer}>
         <Text style={styles.name}>{fname}</Text>
         <Text style={styles.name}>{sname}</Text>
         <Text style={styles.name}>{email}</Text>
+        <TouchableOpacity style = {styles.buttonContainer} onPress={combinelogout}>
+                    <Text style = {{color:'white'}}>Log out</Text>
+        </TouchableOpacity>   
+        <TouchableOpacity style = {styles.buttonContainer} onPress = {() => navigation.navigate('Blocked')}>
+                    <Text style = {{color:'white'}}>Show Blocked Users</Text>
+        </TouchableOpacity>   
       </View>
-      <TouchableOpacity style = {styles.buttonContainer} onPress={combinelogout}>
-                    <Text style = {{color:'red'}}>Log out</Text>
-      </TouchableOpacity>   
+      
     </View>
   );
 };
@@ -177,18 +186,11 @@ export default function ProfileScreen() {
     profileContainer: {
       flexDirection: 'column',
       alignItems: 'center',
-      backgroundColor: '#fff',
+      backgroundColor: '#2e2e2d',
       borderRadius: 10,
       padding: 20,
-      shadowColor: '#000',
-      shadowOffset: {
-        width: 0,
-        height: 5,
-      },
-      shadowOpacity: 0.25,
-      shadowRadius: 3.84,
-      elevation: 5,
     },
+
     imageContainer: {
       width: 80,
       height: 80,
@@ -216,9 +218,11 @@ export default function ProfileScreen() {
     },
     buttonContainer: {
       alignItems:"center",
-      justifyContent:"center",
+      justifyContent:"flex-end",
       paddingVertical:12,
       paddingHorizontal:42,
+      marginTop:10,
+      marginBottom: 10,
       borderRadius:4,
       backgroundColor:'#075E54'
     },

@@ -10,6 +10,10 @@ import ChatScreen from '../screens/chatScreen';
 import TextScreen from '../screens/textScreen';
 import LoginScreen from '../screens/loginScreen';
 import SignUpScreen from '../screens/signUpScreen';
+import ContactScreen from '../screens/contactProfileScreen';
+import BlockedScreen from '../screens/blockedScreen';
+import BlockedProfileScreen from '../screens/blockedProfileScreen';
+
 
 const stack = createNativeStackNavigator(
     );
@@ -48,7 +52,42 @@ const Navigator =() =>{
               headerTitleStyle:{color:"white"},
               headerShadowVisible:false,
               headerTintColor:"white",
-              }}/>
+              }}
+              />
+            <stack.Screen 
+            name = 'Contact Profile'
+            component={ContactScreen} 
+            options={{ 
+              headerTitleAlign:"center",
+              headerStyle:{backgroundColor:"black"},
+              headerTitleStyle:{color:"white"},
+              headerShadowVisible:false,
+              headerTintColor:"white",
+              }}
+              />
+            <stack.Screen 
+            name = 'Blocked'
+            component={BlockedScreen}
+            options={{ 
+              headerTitleAlign:"center",
+              headerStyle:{backgroundColor:"black"},
+              headerTitleStyle:{color:"white"},
+              headerShadowVisible:false,
+              headerTintColor:"white",
+              }}
+            />
+            <stack.Screen 
+            name = 'Blocked Profile'
+            component={BlockedProfileScreen}
+            options={{ 
+              headerTitleAlign:"center",
+              headerStyle:{backgroundColor:"black"},
+              headerTitleStyle:{color:"white"},
+              headerShadowVisible:false,
+              headerTintColor:"white",
+              }}
+            />
+
         </stack.Navigator>
     </NavigationContainer>
   )
