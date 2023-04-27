@@ -194,7 +194,7 @@ export default function ProfileScreen() {
       height: 80,
       borderRadius: 40,
       overflow: 'hidden',
-      marginBottom: 50,
+      marginBottom: 20,
     },
     image: {
       flex: 1,

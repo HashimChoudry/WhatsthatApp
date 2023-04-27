@@ -1,11 +1,38 @@
-import { Text, View, Image, StyleSheet, Pressable, FlatList} from "react-native";
+import { Text, View, Image, StyleSheet, Pressable, FlatList, TextInput} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ContactsItem from "../components/contactsListItem";
 
+const loadContacts = (searchInp) => {
+    return fetch('http://localhost:3333/api/1.0.0/contacts',{
+  method:'get',
+  headers:{
+    'X-authorization': token
+  }
+})
+.then((response) => {
+  if(response.status === 200){
+    return response.json()
+  } else if(response.status === 401){
+    throw '	Unauthorised'
+  }else if(response.status === 404){
+    throw 'Not Found'
+  }else if(response.status === 500){
+    throw 'Server Error'
+  }
+})
+.then((rjson) => {
+  setUserData(rjson)
+  console.log("user data Loaded")
+})
+.catch((err) => {
+  console.log(err)
+})
+}
 
-export default function ContactsScreen() {
+export default function SearchScreen() {
+
     const [userData, setUserData] = useState('')
     const [token, setToken] = useState("")
     const [userID, setUserID] = useState()
@@ -27,8 +54,8 @@ export default function ContactsScreen() {
         )
     } 
 
-    const loadContacts = (searchInp) => {
-        return fetch('http://localhost:3333/api/1.0.0/contacts',{
+    const loadSearch = (searchInp) => {
+        return fetch('http://localhost:3333/api/1.0.0/search?q='+searchInp+'&search_in=all&limit=20&offset=0',{
       method:'get',
       headers:{
         'X-authorization': token
@@ -56,41 +83,16 @@ export default function ContactsScreen() {
 
     useEffect(() => {
         LoadTokenID()
-      },[])
-
-    useEffect(() => {
-        loadContacts();
-    },[token])
+    },[])
 
     return (
-        <FlatList style = {{backgroundColor: 'black'}}
-        data = {userData}
-        renderItem = {({item}) => <ContactsItem contact = {item} />}
-        />
+        <View style={{backgroundColor: 'black'}}>
+            <TextInput></TextInput>
+            <FlatList style = {{backgroundColor: 'black'}}
+            data = {userData}
+            renderItem = {({item}) => <ContactsItem contact = {item} />}
+            />
+        </View>
+        
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-      },
-      name: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        marginBottom: 8,
-      },
-      email: {
-        fontSize: 16,
-        marginBottom: 8,
-      },
-      phone: {
-        fontSize: 16,
-      },
-      loading: {
-        fontSize: 16,
-        fontStyle: 'italic',
-      },
-  });
-  

@@ -68,7 +68,6 @@ export default function ChatScreen (){
 
     LoadTokenID();
     checkLoggedIn();
-  
     return(
 
         <FlatList style= {{backgroundColor: "black"}}
