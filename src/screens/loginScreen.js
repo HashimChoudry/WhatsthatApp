@@ -5,6 +5,7 @@ import DarkBG from "../../assets/images/DarkBG.png"
 import { useState } from "react";
 import { Validator } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from "@react-navigation/native";
 
 
 export default function LoginScreen () {
@@ -77,9 +78,13 @@ export default function LoginScreen () {
         })
 
     }
+    useFocusEffect(
+        React.useCallback(() => {
+         checkLoggedIn();;
+        },[])
+        )
 
 
-    checkLoggedIn();
     return(
         <View style= {styles.container}>
             <View>
@@ -117,7 +122,7 @@ export default function LoginScreen () {
         
         
     );
-}
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -126,9 +131,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
 
        },
-    wrapper: {
-        width:'80%',
-    },
     input: {
         fontSize: 15,
         borderRadius: 50,
@@ -148,5 +150,5 @@ const styles = StyleSheet.create({
         paddingHorizontal:42,
         borderRadius:4,
         backgroundColor:'#075E54'
-    }
-})
+    },
+});

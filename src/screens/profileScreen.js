@@ -16,7 +16,6 @@ export default function ProfileScreen() {
   const [fname, setfname] = useState()
   const [sname, setsname] = useState()
   const [email, setEmail] = useState()
-  const [loggedin, SetLoggedIn]= useState(true)
 
   const navigation = useNavigation()
 

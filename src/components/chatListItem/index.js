@@ -11,10 +11,6 @@ const ListItem = ({chat}) => {
   return (
     
       <Pressable style = {styles.container} onPress = {() => navigation.navigate("Text", {id: chat.id, name: chat.user.name})}>
-          <Image
-          source = {{uri: chat.user.image,}}
-          style = {styles.image}
-            />
           <View style = {styles.content}>
 
               <View style = {styles.row}>

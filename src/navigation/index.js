@@ -13,6 +13,7 @@ import SignUpScreen from '../screens/signUpScreen';
 import ContactScreen from '../screens/contactProfileScreen';
 import BlockedScreen from '../screens/blockedScreen';
 import BlockedProfileScreen from '../screens/blockedProfileScreen';
+import SearchProfileScreen from '../screens/searchProfileScreen';
 
 
 const stack = createNativeStackNavigator(
@@ -79,6 +80,17 @@ const Navigator =() =>{
             <stack.Screen 
             name = 'Blocked Profile'
             component={BlockedProfileScreen}
+            options={{ 
+              headerTitleAlign:"center",
+              headerStyle:{backgroundColor:"black"},
+              headerTitleStyle:{color:"white"},
+              headerShadowVisible:false,
+              headerTintColor:"white",
+              }}
+            />
+            <stack.Screen 
+            name = 'Search Profile'
+            component={SearchProfileScreen}
             options={{ 
               headerTitleAlign:"center",
               headerStyle:{backgroundColor:"black"},

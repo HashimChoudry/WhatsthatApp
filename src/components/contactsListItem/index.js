@@ -3,7 +3,7 @@ import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
-const setUserID = async (userID) => {
+export const setUserID = async (userID) => {
     try{
         await AsyncStorage.setItem('whatsthat_contact_id', userID)
     }catch{
