@@ -1,24 +1,89 @@
 import { View, Text, StyleSheet, TextInput} from "react-native";
 import {AntDesign, MaterialIcons} from "@expo/vector-icons"
 import { useState } from "react";
+import { useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 export default function Inputbox() {
     const [message, setMessage] = useState('');
-    const sendMessage = () =>{
-        console.warn("message Sent", message)
+    const [token, setToken] = useState();
+    const [chatID, setChatID] = useState()
 
-        setMessage('');
+    const loadTokenID = () => {
+        AsyncStorage.getItem('whatsthat_session_token').then(data => {
+            if(data !== null){
+                setToken(data)
+            }
+        }).catch(
+            (error) => console.log(error)
+        )
+        AsyncStorage.getItem('whatsthat_chat_id').then(data => {
+            if(data !== null){
+                setChatID(data)
+            }
+        }).catch(
+            (error) => console.log(error)
+        )
     }
+
+
+    const sendMessage = () =>{
+        const jsonMessage = {
+            message:message
+        }
+        setMessage('')
+        if(!jsonMessage.message ==''){
+            return fetch("http://localhost:3333/api/1.0.0/chat/" + chatID + '/message', {
+                method:'post',
+                headers:{
+                    'Content-Type':'application/json',
+                    'X-authorization': token
+                },
+                body:(JSON.stringify(jsonMessage))
+            })
+            .then((Response) => {
+                if(Response.status == 200){
+                    return Response.json()
+                }else if (Response.status == 400){
+                    throw'failed validation'
+                }else if (Response.status == 401){
+                    throw'Unauthorized'
+                }else if (Response.status == 403){
+                    throw'Forbidden'
+                }else if (Response.status == 404){
+                    throw'Not Found'
+                }else if (Response.status == 500){
+                    throw'Server Error'
+                }else{
+                    throw'something went wrong'
+                }
+            })
+            .then((responseJson) => {
+                console.warn(responseJson.json());
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+        }  
+    }
+
+    const sendHandler = async () => {
+        
+        sendMessage();
+        
+    }
+
+    useEffect(() => {
+      loadTokenID()
+    
+    }, [])
+
+    
 
     return(
         
         <View style = {styles.container}>
-            <AntDesign
-            name="plus" 
-            size = {24}
-            color="royalblue"
-            />
             <TextInput
             style = {styles.input}
             placeholderTextColor={"white"}
@@ -42,6 +107,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         backgroundColor: "#242322",
         alignItems:"center",
+        justifyContent: 'flex-end',
         padding: 5,
     },
     input: {

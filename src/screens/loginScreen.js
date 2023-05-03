@@ -3,7 +3,7 @@ import {Text, View, Button, TextInput, StyleSheet, TouchableOpacity, Pressable, 
 import { useNavigation } from "@react-navigation/native";
 import DarkBG from "../../assets/images/DarkBG.png"
 import { useState } from "react";
-import { Validator } from "react";
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from "@react-navigation/native";
 
@@ -80,7 +80,7 @@ export default function LoginScreen () {
     }
     useFocusEffect(
         React.useCallback(() => {
-         checkLoggedIn();;
+         checkLoggedIn();
         },[])
         )
 

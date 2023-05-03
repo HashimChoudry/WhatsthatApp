@@ -59,6 +59,8 @@ export default function ContactsScreen() {
       },[token])
       )
 
+      
+
     return (
         <FlatList style = {{backgroundColor: 'black'}}
         data = {userData}

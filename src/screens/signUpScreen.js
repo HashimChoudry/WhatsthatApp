@@ -23,7 +23,6 @@ export default function SignUpScreen () {
         setSname('')
         setEmail('')
         setPassword('')
-        console.warn(JSON.stringify(to_send))
         return fetch("http://localhost:3333/api/1.0.0/user", {
             method:'post',
             headers:{

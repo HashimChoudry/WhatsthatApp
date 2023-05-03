@@ -1,28 +1,41 @@
 import { Text, View, Image, StyleSheet, Pressable} from "react-native";
 import { useNavigation } from "@react-navigation/native";
-
-
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
-dayjs.extend(relativeTime);
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import Swipeable from 'react-native-gesture-handler/Swipeable';
 
 const ListItem = ({chat}) => {
   const navigation = useNavigation();
+  let time = new Date(chat.last_message.timestamp).toLocaleTimeString('en-UK')
+
+  const setChatID = async() => {
+    try{
+      await AsyncStorage.setItem('whatsthat_chat_id', chat.chat_id);
+  }catch{
+      throw 'error with async';
+  }
+  }
+
+  const chatNavigationHandler = () => {
+    setChatID();
+    navigation.navigate('Text')
+  }
+
+ 
+
   return (
-    
-      <Pressable style = {styles.container} onPress = {() => navigation.navigate("Text", {id: chat.id, name: chat.user.name})}>
-          <View style = {styles.content}>
+    <Pressable style = {styles.container} onPress = {() => {chatNavigationHandler(chat.chat_id)}}>
+        <View style = {styles.content}>
 
-              <View style = {styles.row}>
-                  <Text numberOfLines={1} style = {styles.name}>{chat.user.name}</Text>
-                  <Text style = {styles.subTitle} >{dayjs(chat.lastMessage.createdAt).fromNow(true)}</Text>
-                  
-              </View>
+            <View style = {styles.row}>
+                <Text numberOfLines={1} style = {styles.name}>{chat.name}</Text>
+                <Text style = {styles.subTitle} >{time}</Text>
+                
+            </View>
 
-              <Text numberOfLines={2} style = {styles.subTitle}>{chat.lastMessage.text}</Text>
-          </View>
-      </Pressable>
-  )
+            <Text numberOfLines={2} style = {styles.subTitle}>{chat.last_message.author.first_name}: {chat.last_message.message}</Text>
+        </View>
+    </Pressable>
+)
 }
 
 const styles = StyleSheet.create({
