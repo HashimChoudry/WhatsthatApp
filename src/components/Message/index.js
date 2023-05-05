@@ -8,7 +8,7 @@ import React from "react";
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { Pressable } from "react-native";
 
-export default function Message({messages}) {
+export default function Message({messages, messageDeleted}) {
     const [token, setToken] = useState()
     const [userId, setUserId] = useState(0)
     const [chatId, setChatId] = useState(0)
@@ -48,13 +48,35 @@ export default function Message({messages}) {
             headers:{   
                 'X-authorization': token,
             }
+        }).then ((response) => {
+            if (response.status == 200) {
+                return response.json()
+            }else if (response.status == 401){
+                throw 'Unauthorized'
+            }else if (response.status == 403) {
+                throw 'Forbidden'
+            }else if (response.status == 404) {
+                throw 'Not Found';
+            }else if (response.status == 500){
+                throw 'Server Error';
+            }
+        }).then((rjson) => {
+            console.warn(rjson)
+        }).catch((err) => {
+            console.log(err)
         })
     }
+
+    const deleteHandler =  () => {
+        deleteMessage();
+        messageDeleted();
+    }
+
     const time =  new Date(messages.timestamp).toLocaleTimeString('en-UK')
 
     const leftSwipe = () => {
         return(
-          <Pressable style = {styles.deleteBox} onPress = {() => {console.warn(messages.message_id)}}>
+          <Pressable style = {styles.deleteBox} onPress = {() => {deleteHandler()}}>
             <Text>Delete</Text>
           </Pressable>
         )

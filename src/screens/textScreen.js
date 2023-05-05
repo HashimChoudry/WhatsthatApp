@@ -1,11 +1,10 @@
-import { View, TextInput, ImageBackground, StyleSheet, FlatList, KeyboardAvoidingView, Platform} from "react-native";
+import { View, TextInput, ImageBackground, StyleSheet, FlatList, KeyboardAvoidingView, Platform, Button, TouchableOpacity} from "react-native";
 import { useRoute,useNavigation, useFocusEffect } from "@react-navigation/native";
 import {AntDesign, MaterialIcons} from "@expo/vector-icons"
 
 import { useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React from "react";
-import Swipeable from 'react-native-gesture-handler/Swipeable';
 
 import DarkBG from "../../assets/images/DarkBG.png"
 import Message from "../components/Message";
@@ -19,6 +18,7 @@ export default function TextScreen (){
     const [token, setToken] = useState('');
     const [message, setMessage] = useState('');
     const [sent, setSent] = useState(false)
+    const [msgDelete, setMsgDelete] = useState(false)
 
     const getTokenChatID = () =>{
         AsyncStorage.getItem('whatsthat_chat_id').then(data => {
@@ -55,6 +55,8 @@ export default function TextScreen (){
             })
             .then((rjson) => {
                 setChatData(rjson);
+                setSent(false);
+                setMsgDelete(false)
             })
             .catch((err) => {
                 console.log(err)
@@ -102,6 +104,10 @@ export default function TextScreen (){
         setSent(true);
     }
 
+    const messageDeleted = () =>{
+        setMsgDelete(true);
+    }
+
    useFocusEffect(
     React.useCallback(() => {
       getTokenChatID();
@@ -116,18 +122,18 @@ export default function TextScreen (){
         },[chatData])
     )
     
-
    useFocusEffect(
-    React.useCallback(() => {
-      loadChatData();
-    },[token])
+        React.useCallback(() => {
+        loadChatData();
+        },[token])
     )
 
     useFocusEffect(
         React.useCallback(() => {
-          loadChatData();
-          setSent(false)
-        },[sent])
+            if(sent || msgDelete){
+                loadChatData();
+            }
+        },[sent,msgDelete])
     )
 
     return(
@@ -135,7 +141,7 @@ export default function TextScreen (){
             <ImageBackground source={DarkBG} style = {styles.bg}>
                 <FlatList
                 data = {chatData.messages}
-                renderItem = {({item}) => <Message messages = {item} />}
+                renderItem = {({item}) => <Message messages = {item} messageDeleted = {messageDeleted}/>}
                 inverted
                 />
                  <View style = {styles.container}>
