@@ -1,10 +1,12 @@
-import { Text, View, Image, StyleSheet, Pressable} from "react-native";
+import { Text, View, Image, StyleSheet, Pressable, TouchableOpacity} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Swipeable from 'react-native-gesture-handler/Swipeable';
+import { useState } from "react";
 
 const ListItem = ({chat}) => {
   const navigation = useNavigation();
+  
   let time = new Date(chat.last_message.timestamp).toLocaleTimeString('en-UK')
 
   const setChatID = async() => {
@@ -20,22 +22,48 @@ const ListItem = ({chat}) => {
     navigation.navigate('Text')
   }
 
- 
+  const editChatHandler =() => {
+    setChatID();
+    navigation.navigate('Edit Chats')
+  }
 
-  return (
-    <Pressable style = {styles.container} onPress = {() => {chatNavigationHandler(chat.chat_id)}}>
-        <View style = {styles.content}>
 
-            <View style = {styles.row}>
-                <Text numberOfLines={1} style = {styles.name}>{chat.name}</Text>
-                <Text style = {styles.subTitle} >{time}</Text>
-                
-            </View>
+  if(Object.keys(chat.last_message).length !==0){
+    return (
+      <Pressable style = {styles.container} onPress = {() => {chatNavigationHandler(chat.chat_id)}}>
+          <View style = {styles.content}>
+  
+              <View style = {styles.row}>
+                  <Text numberOfLines={1} style = {styles.name}>{chat.name}</Text>
+                  <Text style = {styles.subTitle} >{time}</Text>       
+              </View>
+              <Text numberOfLines={2} style = {styles.subTitle}>{chat.last_message.author.first_name}: {chat.last_message.message}</Text>
+              <TouchableOpacity style = {styles.editButton} onPress={() => {editChatHandler()}}>
+                    <Text style={{color:'white'}}>Edit Chat</Text>
+                </TouchableOpacity>
+          </View>
+      </Pressable>
+    );
+  }else{
+    return (
+      <View>
+      <Pressable style = {styles.container} onPress = {() => {chatNavigationHandler(chat.chat_id)}}>
+          <View style = {styles.content}>
+  
+              <View style = {styles.row}>
+                  <Text numberOfLines={1} style = {styles.name}>{chat.name}</Text>          
+              </View>
+              <TouchableOpacity style = {styles.editButton} onPress={() => {editChatHandler()}}>
+                    <Text style={{color:'white'}}>Edit Chat</Text>
+                </TouchableOpacity>
+          </View>
+      </Pressable>
+      </View>
+      
+    );
+  };
+  
 
-            <Text numberOfLines={2} style = {styles.subTitle}>{chat.last_message.author.first_name}: {chat.last_message.message}</Text>
-        </View>
-    </Pressable>
-)
 }
 
 const styles = StyleSheet.create({
@@ -68,6 +96,10 @@ const styles = StyleSheet.create({
     },
     subTitle: {
       color: "grey",
+    },
+    editButton: {
+      alignContent:'flex-end',
+      alignItems:'flex-end'
     },
   });
 

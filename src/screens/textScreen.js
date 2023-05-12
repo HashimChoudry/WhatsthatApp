@@ -1,7 +1,7 @@
 import { View, TextInput, ImageBackground, StyleSheet, FlatList, KeyboardAvoidingView, Platform, Button, TouchableOpacity} from "react-native";
 import { useRoute,useNavigation, useFocusEffect } from "@react-navigation/native";
 import {AntDesign, MaterialIcons} from "@expo/vector-icons"
-
+import { useEffect } from "react";
 import { useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React from "react";
@@ -19,6 +19,7 @@ export default function TextScreen (){
     const [message, setMessage] = useState('');
     const [sent, setSent] = useState(false)
     const [msgDelete, setMsgDelete] = useState(false)
+    const [msgEdit, setMsgEdit] = useState(false)
 
     const getTokenChatID = () =>{
         AsyncStorage.getItem('whatsthat_chat_id').then(data => {
@@ -46,6 +47,9 @@ export default function TextScreen (){
             })
             .then((response) => {
                 if(response.status === 200){
+                 setSent(false);
+                 setMsgDelete(false)
+                 setMsgEdit(false)
                  return response.json()
                 } else if(response.status === 401){
                  throw 'Unauthorised'
@@ -55,8 +59,6 @@ export default function TextScreen (){
             })
             .then((rjson) => {
                 setChatData(rjson);
-                setSent(false);
-                setMsgDelete(false)
             })
             .catch((err) => {
                 console.log(err)
@@ -108,6 +110,10 @@ export default function TextScreen (){
         setMsgDelete(true);
     }
 
+    const messageEdited = () => {
+        setMsgEdit(true)
+    }
+
    useFocusEffect(
     React.useCallback(() => {
       getTokenChatID();
@@ -122,6 +128,11 @@ export default function TextScreen (){
         },[chatData])
     )
     
+    useEffect(() => {
+        console.warn('something sent')
+        loadChatData();
+    }, [sent, msgDelete, msgEdit])
+
    useFocusEffect(
         React.useCallback(() => {
         loadChatData();
@@ -130,10 +141,10 @@ export default function TextScreen (){
 
     useFocusEffect(
         React.useCallback(() => {
-            if(sent || msgDelete){
+            if(msgDelete|| msgEdit){
                 loadChatData();
             }
-        },[sent,msgDelete])
+        },[msgDelete,msgEdit])
     )
 
     return(
@@ -141,7 +152,7 @@ export default function TextScreen (){
             <ImageBackground source={DarkBG} style = {styles.bg}>
                 <FlatList
                 data = {chatData.messages}
-                renderItem = {({item}) => <Message messages = {item} messageDeleted = {messageDeleted}/>}
+                renderItem = {({item}) => <Message messages = {item} messageDeleted = {messageDeleted} messageEdited={messageEdited}/>}
                 inverted
                 />
                  <View style = {styles.container}>

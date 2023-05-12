@@ -1,8 +1,9 @@
-import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, Image, StyleSheet, TouchableOpacity, Modal, Button, TouchableHighlight, Alert } from "react-native";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { TextInput } from "react-native-gesture-handler";
 
 
 
@@ -13,6 +14,8 @@ export default function ContactProfileScreen() {
   const [sname, setsname] = useState()
   const [email, setEmail] = useState()
   const [contactImage, setContactImage] = useState();
+  const [modalVisible, setModalVisible] = useState(false);
+  const [chatName, setChatName] = useState('')
 
   const navigation = useNavigation()
 
@@ -62,7 +65,7 @@ export default function ContactProfileScreen() {
     })
   }
 
-const loadContactImage = () => {
+  const loadContactImage = () => {
   return fetch("http://localhost:3333/api/1.0.0/user/" + contactID + "/photo", {
       method:'get',
       headers:{
@@ -73,7 +76,7 @@ const loadContactImage = () => {
       if(response.status === 200){
         return response.blob()
       }else if(response.status === 401){
-        throw '	Unauthorised'
+        throw 'Unauthorised'
       }else if(response.status === 404){
         throw 'Not Found'
       }else if(response.status === 500){
@@ -103,7 +106,7 @@ const loadContactImage = () => {
         }else if(response.status === 400){
             throw 'cant remove yourself lol'
         }else if(response.status === 401){
-          throw '	Unauthorised'
+          throw 'Unauthorised'
         }else if(response.status === 404){
           throw 'Not Found'
         }else if(response.status === 500){
@@ -131,7 +134,7 @@ const loadContactImage = () => {
         }else if(response.status === 400){
             throw 'cant block yourself lol'
         }else if(response.status === 401){
-          throw '	Unauthorised'
+          throw 'Unauthorised'
         }else if(response.status === 404){
           throw 'Not Found'
         }else if(response.status === 500){
@@ -143,8 +146,47 @@ const loadContactImage = () => {
       .catch((err) => {
         console.log(err)
       })
-  
   }
+
+  const newChat = (name) => {
+    if (name !== ''){
+      let jsonName = {
+        "name": name
+      }
+      jsonName = JSON.stringify(jsonName)
+      return fetch('http://localhost:3333/api/1.0.0/chat', {
+        method:'post',
+        headers:{
+          'X-authorization': token,
+          'Content-Type': 'application/json',
+        },
+        body:jsonName
+      }).then((response) =>{
+        if(response.status === 201){
+          return response.json
+        }else if (response.status === 400){
+          throw 'Bad Request'
+        }else if(response === 401){
+          throw 'unauthorized'
+        }else if(response === 500){
+          throw 'server error'
+        }
+      }).then ((rjson) => {
+        consosole.warn('created lol')
+      }).catch((err) => {
+        console,log(err)
+      })
+    }
+
+  }
+
+  const createNewChatHandler = (name) => {
+    newChat(name)
+    setModalVisible(false)
+    navigation.navigate('main')
+  }
+
+
 
   const removeHandler = () => {
     removeContact();
@@ -168,19 +210,18 @@ const loadContactImage = () => {
 
 
   return (
-    
     <View style={styles.container}>
       <View style={styles.imageContainer}>
         <Image 
-          style={styles.image} 
-          source={{ uri: contactImage }} 
+          style={styles.image}
+          source={{ uri: contactImage }}
         />
       </View>
       <View style={styles.profileContainer}>
         <Text style={styles.name}>{fname}</Text>
         <Text style={styles.name}>{sname}</Text>
         <Text style={styles.name}>{email}</Text>
-        <TouchableOpacity style = {styles.buttonContainer} onPress={() => {console.warn("dummy")}}>
+        <TouchableOpacity style = {styles.buttonContainer} onPress={() => {setModalVisible(true)}}>
                     <Text style = {{color:'white'}}>Create Chat</Text>
         </TouchableOpacity> 
 
@@ -192,6 +233,29 @@ const loadContactImage = () => {
                         <Text style = {{color:'white'}}>Remove User</Text>
         </TouchableOpacity> 
       </View>
+      <Modal
+        transparent = {true}
+        visible = {modalVisible}
+        animationType = {"fade"}
+      >
+        <View style = {styles.modalContainer}>
+          <View style = {styles.modalContent}>
+            <TextInput
+            style = {styles.input}
+            placeholder="Enter Chat Name..."
+            placeholderTextColor={'grey'}
+            value = {chatName}
+            onChangeText={setChatName}
+            />
+            <TouchableHighlight style = {styles.buttonContainer} onPress={()=>{createNewChatHandler(chatName)}}>
+              <Text style = {{color:'white'}}>Create Chat</Text>
+            </TouchableHighlight>
+            <TouchableHighlight style = {styles.buttonContainer} onPress={()=>{setModalVisible(false)}}>
+              <Text style = {{color:'white'}}>Go Away</Text>
+            </TouchableHighlight>
+          </View>
+        </View>
+      </Modal>
     </View>
 
     
@@ -247,6 +311,29 @@ const loadContactImage = () => {
       borderRadius:4,
       backgroundColor:'#075E54'
     },
-
+    modalContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    modalContent: {
+      width: 400,
+      height: 400,
+      backgroundColor: '#2e2e2d',
+      borderRadius:40,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    input: {
+      fontSize:15,
+      borderRadius: 50,
+      borderWidth: StyleSheet.hairlineWidth,
+      padding:10,
+      marginBottom:10,
+      height:30,
+      borderColor: "lightgray",
+      backgroundColor:'white',
+  },
   });
   

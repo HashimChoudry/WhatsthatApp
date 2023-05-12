@@ -7,13 +7,16 @@ import { useFocusEffect } from "@react-navigation/native";
 import React from "react";
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { Pressable } from "react-native";
+import { Modal, TouchableOpacity } from "react-native-web";
+import { TextInput } from "react-native-web";
 
-export default function Message({messages, messageDeleted}) {
+export default function Message({messages, messageDeleted, messageEdited}) {
     const [token, setToken] = useState()
     const [userId, setUserId] = useState(0)
     const [chatId, setChatId] = useState(0)
+    const [modalVisible, setModalVisible] = useState(false)
+    const [message,setMessage] = useState('')
     
-
     const loadTokenID = () => {
         AsyncStorage.getItem('whatsthat_session_token').then(data => {
             if(data !== null){
@@ -72,6 +75,10 @@ export default function Message({messages, messageDeleted}) {
         messageDeleted();
     }
 
+    const EditHandler = () =>{
+        messageEdited()
+    }
+
     const time =  new Date(messages.timestamp).toLocaleTimeString('en-UK')
 
     const leftSwipe = () => {
@@ -82,6 +89,14 @@ export default function Message({messages, messageDeleted}) {
         )
       }
 
+    const rightSwipe = () => {
+        return(
+            <Pressable style = {styles.editBox} onPress={console.warn('editing')}>
+                <Text>Edit Chat</Text>
+            </Pressable>
+        )
+    }
+
     useEffect(()=>{
         loadTokenID()
     },[])
@@ -89,6 +104,7 @@ export default function Message({messages, messageDeleted}) {
     return(
         <Swipeable
         renderRightActions={leftSwipe}
+        renderLeftActions={isUsrMessage() ? rightSwipe : null}
         >
             <View style = {[styles.container,{
                 backgroundColor:isUsrMessage() ? "#075E54" : "#2e2e2d",
@@ -97,6 +113,7 @@ export default function Message({messages, messageDeleted}) {
                 <Text style = {{color:"white"}}>{messages.message}</Text>
                 <Text style = {styles.time}>{time}</Text>
             </View>
+        
         </Swipeable>
     )
 }
@@ -130,4 +147,13 @@ const styles = StyleSheet.create({
         marginVertical: 5,
         borderRadius: 10,
       },
+    editBox: {
+        backgroundColor:'#2e2e2d',
+        justifyContent:'center',
+        alignItems:'center',
+        padding: 10,
+        marginHorizontal: 15,
+        marginVertical: 5,
+        borderRadius: 10,
+    },
 })

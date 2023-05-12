@@ -14,6 +14,7 @@ import ContactScreen from '../screens/contactProfileScreen';
 import BlockedScreen from '../screens/blockedScreen';
 import BlockedProfileScreen from '../screens/blockedProfileScreen';
 import SearchProfileScreen from '../screens/searchProfileScreen';
+import EditChatScreen from '../screens/editChatScreen';
 
 
 const stack = createNativeStackNavigator(
@@ -92,6 +93,17 @@ const Navigator =() =>{
             <stack.Screen 
             name = 'Search Profile'
             component={SearchProfileScreen}
+            options={{ 
+              headerTitleAlign:"center",
+              headerStyle:{backgroundColor:"black"},
+              headerTitleStyle:{color:"white"},
+              headerShadowVisible:false,
+              headerTintColor:"white",
+              }}
+            />
+            <stack.Screen 
+            name = 'Edit Chats'
+            component={EditChatScreen}
             options={{ 
               headerTitleAlign:"center",
               headerStyle:{backgroundColor:"black"},

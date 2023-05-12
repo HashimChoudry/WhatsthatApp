@@ -12,8 +12,8 @@ export default function ChatScreen (){
     const navigation = useNavigation();
 
     const [chat, setChats] = useState()
-
     const [token, setToken] = useState('')
+    const [nameChange, setNameChange] = useState(false)
 
 
     const LoadTokenID = () =>{
@@ -33,9 +33,12 @@ export default function ChatScreen (){
         }
     }
 
+    const nameChanged = () =>{
+        setNameChange(true)
+    }
+
 
     const loadChats = () => {
-
         return fetch('http://localhost:3333/api/1.0.0/chat',{
         method:'get',
         headers:{
@@ -46,18 +49,18 @@ export default function ChatScreen (){
             if(response.status === 200){
             return response.json()
             } else if(response.status === 401){
-            throw '	Unauthorised'
+            throw 'Unauthorised'
             }else if(response.status === 500){
             throw 'Server Error'
             }
         })
         .then((rjson) => {
             setChats(rjson)
+            setNameChange(false)
         })
         .catch((err) => {
             console.log(err)
         })
-        
     }
 
     useEffect(() => {
@@ -70,6 +73,7 @@ export default function ChatScreen (){
           loadChats();
         },[token])
     )
+
 
     return(
 

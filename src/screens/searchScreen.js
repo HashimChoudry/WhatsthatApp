@@ -3,7 +3,6 @@ import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { TouchableOpacity } from "react-native";
-import ContactsItem from "../components/contactsListItem";
 import SearchedItem from "../components/searchListItem";
 
 
