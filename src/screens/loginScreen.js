@@ -6,11 +6,13 @@ import { useState } from "react";
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from "@react-navigation/native";
+import { useEffect } from "react";
 
 
 export default function LoginScreen () {
     const [email,setEmail] = useState('');
     const [password,setPassword] = useState('');
+    const [loggedIn, setloggedIn] = useState(false)
 
 
 
@@ -22,6 +24,8 @@ export default function LoginScreen () {
         const value = await AsyncStorage.getItem('whatsthat_session_token')
         if (value != null){
             navigation.navigate('main')
+        }else{
+            setloggedIn(false)
         }
     }
 
@@ -78,11 +82,10 @@ export default function LoginScreen () {
         })
 
     }
-    useFocusEffect(
-        React.useCallback(() => {
+    useEffect(() => {
          checkLoggedIn();
         },[])
-        )
+        
 
 
     return(

@@ -20,17 +20,10 @@ export default function SearchScreen() {
         }).catch(
             (error) => console.log(error)
         )
-        AsyncStorage.getItem('whatsthat_user_id').then(data => {
-            if(data !== null){
-                setUserID(data)
-            }
-        }).catch(
-            (error) => console.log(error)
-        )
     };
 
     const loadSearch = (searchInp) => {
-        return fetch('http://localhost:3333/api/1.0.0/search?q='+searchInp+'&search_in=all&limit=20&offset=0',{
+      return fetch('http://localhost:3333/api/1.0.0/search?q='+searchInp+'&search_in=all&limit=20&offset=0',{
       method:'get',
       headers:{
         'X-authorization': token
@@ -40,7 +33,7 @@ export default function SearchScreen() {
       if(response.status === 200){
         return response.json()
       } else if(response.status === 401){
-        throw '	Unauthorised'
+        throw 'Unauthorised'
       }else if(response.status === 404){
         throw 'Not Found'
       }else if(response.status === 500){

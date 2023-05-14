@@ -7,7 +7,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import React from "react";
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { Pressable } from "react-native";
-import { Modal, TouchableOpacity } from "react-native-web";
+import { Modal, TouchableOpacity, TouchableHighlight } from "react-native-web";
 import { TextInput } from "react-native-web";
 
 export default function Message({messages, messageDeleted, messageEdited}) {
@@ -15,7 +15,7 @@ export default function Message({messages, messageDeleted, messageEdited}) {
     const [userId, setUserId] = useState(0)
     const [chatId, setChatId] = useState(0)
     const [modalVisible, setModalVisible] = useState(false)
-    const [message,setMessage] = useState('')
+    const [message,setMessage] = useState("")
     
     const loadTokenID = () => {
         AsyncStorage.getItem('whatsthat_session_token').then(data => {
@@ -70,13 +70,44 @@ export default function Message({messages, messageDeleted, messageEdited}) {
         })
     }
 
+    const updateMessage = (input) => {
+        return fetch("http://localhost:3333/api/1.0.0/chat/" + chatId + "/message/" + messages.message_id,{
+            method: 'PATCH',
+            headers:{   
+                'X-authorization': token,
+                'Content-Type':'application/json',
+            },
+            body:JSON.stringify(input)
+        }).then ((response) => {
+            if (response.status == 200) {
+                return response.json()
+            }else if (response.status == 400) {
+                throw 'bad request'
+            }else if (response.status == 401){
+                throw 'Unauthorized'
+            }else if (response.status == 403) {
+                throw 'Forbidden'
+            }else if (response.status == 404) {
+                throw 'Not Found';
+            }else if (response.status == 500){
+                throw 'Server Error';
+            }
+        }).then((rjson) => {
+            console.warn(rjson)
+        }).catch((err) => {
+            console.log(err)
+        })
+    }
+    
+
     const deleteHandler =  () => {
         deleteMessage();
         messageDeleted();
     }
 
-    const EditHandler = () =>{
-        messageEdited()
+    const EditHandler = (input) =>{
+        updateMessage(input)
+        messageDeleted()
     }
 
     const time =  new Date(messages.timestamp).toLocaleTimeString('en-UK')
@@ -102,19 +133,44 @@ export default function Message({messages, messageDeleted, messageEdited}) {
     },[])
 
     return(
-        <Swipeable
-        renderRightActions={leftSwipe}
-        renderLeftActions={isUsrMessage() ? rightSwipe : null}
-        >
-            <View style = {[styles.container,{
-                backgroundColor:isUsrMessage() ? "#075E54" : "#2e2e2d",
-                alignSelf:isUsrMessage() ? "flex-end" : "flex-start"
-                } ]}>
-                <Text style = {{color:"white"}}>{messages.message}</Text>
-                <Text style = {styles.time}>{time}</Text>
-            </View>
-        
-        </Swipeable>
+        <View>
+            <Swipeable
+            renderRightActions={isUsrMessage() ? leftSwipe: null}
+            >
+                <Pressable style = {[styles.container,{
+                    backgroundColor:isUsrMessage() ? "#075E54" : "#2e2e2d",
+                    alignSelf:isUsrMessage() ? "flex-end" : "flex-start"
+                    } ]} onPress={() => {setModalVisible(true)}}>
+                    <Text style = {{color:"white"}}>{messages.message}</Text>
+                    <Text style = {styles.time}>{time}</Text>
+                </Pressable>
+            
+            </Swipeable>
+            <Modal
+                transparent = {true}
+                visible = {modalVisible}
+                animationType = {"fade"}
+            >
+                <View style = {styles.modalContainer}>
+                <View style = {styles.modalContent}>
+                    <Text style = {styles.editText}>Edit Message</Text>
+                    <TextInput
+                    style = {styles.input}
+                    placeholder={messages.message}
+                    placeholderTextColor={'grey'}
+                    value = {message}
+                    onChangeText={setMessage}
+                    />
+                    <TouchableHighlight style = {styles.buttonContainer} onPress={()=>{let jsonMessage = {"message": message}; EditHandler(jsonMessage)}}>
+                        <Text style = {{color:'white'}}>Edit Chat</Text>
+                    </TouchableHighlight>
+                    <TouchableHighlight style = {styles.buttonContainer} onPress={()=>{setModalVisible(false)}}>
+                        <Text style = {{color:'white'}}>Go Away</Text>
+                    </TouchableHighlight>
+                </View>
+                </View>
+            </Modal>
+        </View>
     )
 }
 
@@ -155,5 +211,44 @@ const styles = StyleSheet.create({
         marginHorizontal: 15,
         marginVertical: 5,
         borderRadius: 10,
+    },
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      },
+      modalContent: {
+        width: 400,
+        height: 400,
+        backgroundColor: '#2e2e2d',
+        borderRadius:40,
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
+      buttonContainer: {
+        alignItems:"center",
+        justifyContent:"flex-end",
+        paddingVertical:12,
+        paddingHorizontal:42,
+        marginTop:10,
+        marginBottom: 10,
+        borderRadius:4,
+        backgroundColor:'#075E54'
+      },
+      input: {
+        fontSize:15,
+        borderRadius: 50,
+        borderWidth: StyleSheet.hairlineWidth,
+        padding:10,
+        marginBottom:10,
+        height:30,
+        borderColor: "lightgray",
+        backgroundColor:'white',
+    },
+    editText: {
+        fontSize:20,
+        marginBottom:10,
+        color:'white',
     },
 })

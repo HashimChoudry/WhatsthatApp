@@ -6,6 +6,8 @@ import { useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React from "react";
 
+import { TouchableHighlight } from "react-native-web";
+
 import DarkBG from "../../assets/images/DarkBG.png"
 import Message from "../components/Message";
 
@@ -20,6 +22,7 @@ export default function TextScreen (){
     const [sent, setSent] = useState(false)
     const [msgDelete, setMsgDelete] = useState(false)
     const [msgEdit, setMsgEdit] = useState(false)
+    const [modalVisible, setModalVisible] = useState(false);
 
     const getTokenChatID = () =>{
         AsyncStorage.getItem('whatsthat_chat_id').then(data => {
@@ -70,7 +73,6 @@ export default function TextScreen (){
             let jsonMessage = {
                 message:Text
             }
-
             return fetch('http://localhost:3333/api/1.0.0/chat/' + chatId + '/message', {
                 method: 'post',
                 headers: {
@@ -111,7 +113,8 @@ export default function TextScreen (){
     }
 
     const messageEdited = () => {
-        setMsgEdit(true)
+        setModalVisible(true)
+
     }
 
    useFocusEffect(

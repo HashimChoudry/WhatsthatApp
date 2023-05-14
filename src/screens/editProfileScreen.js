@@ -1,4 +1,4 @@
-import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, Image, StyleSheet, TouchableOpacity, TextInput} from "react-native";
 import { useState } from "react";
 import { useEffect } from "react";
 import React from "react";
@@ -7,7 +7,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 
-export default function ProfileScreen() {
+
+
+export default function EditProfileScreen() {
 
   const [isLoading, setIsLoading] = useState(true)
   const [token, setToken] = useState("")
@@ -16,8 +18,14 @@ export default function ProfileScreen() {
   const [fname, setfname] = useState()
   const [sname, setsname] = useState()
   const [email, setEmail] = useState()
+  const [pass,setPass] = useState()
+  const [hasPermission,setHasPermission] = useState(null)
 
   const navigation = useNavigation()
+
+  const getCameraPermission = async () => {
+    console.warn('')
+  }
 
   const LoadTokenID = () =>{
       AsyncStorage.getItem('whatsthat_session_token').then(data => {
@@ -93,44 +101,38 @@ export default function ProfileScreen() {
     })
   }
 
-  const logoutUser = () => {
-    return fetch("http://localhost:3333/api/1.0.0/logout",{
-      method:'post',
-      headers:{
-        'X-authorization':token
-      }
+  const updateUserData =(input) => {
+    fetch("http://localhost:3333/api/1.0.0/user/" + userID,{
+        method:'PATCH',
+        headers:{
+            'X-authorization': token,
+            'Content-Type':'application/json'
+        },
+        body:(JSON.stringify(input))
+    }).then((response) => {
+        if (response.status == 200) {
+            return response.json()
+        }else if (response.status == 400) {
+            throw 'bad request'
+        }else if (response.status == 401){
+            throw 'Unauthorized'
+        }else if (response.status == 403) {
+            throw 'Forbidden'
+        }else if (response.status == 404) {
+            throw 'Not Found';
+        }else if (response.status == 500){
+            throw 'Server Error';
+        }
+    }).then((rJson) => {
+        console.log(rJson);
+    }).catch((err) => {
+        console.log(err);
     })
-    .then((response) => {
-      if(response.status === 200){
-        return response.json()
-      } else if(response.status === 401){
-        throw '	Unauthorised'
-      }else if(response.status === 404){
-        throw 'Not Found'
-      }else if(response.status === 500){
-        throw 'Server Error'
-      }
-    }).then(() =>{
-      console.log('logged out')
-    })
-    .catch((err) => {
-      console.log(err)
-    })
-
-  }
-  const clearAsync = async () => {
-    try{
-      await AsyncStorage.setItem('whatsthat_user_id', '');
-      await AsyncStorage.setItem('whatsthat_session_token','');    
-      navigation.navigate('Login')        
-    }catch{
-        throw 'something went wrong'
-    }
   }
 
-  const combinelogout = () =>{
-    logoutUser();
-    clearAsync();
+  const patchHandler = (input) => {
+    updateUserData(input)
+    loadUserData()
   }
 
   
@@ -147,10 +149,6 @@ export default function ProfileScreen() {
     },[token])
     )
 
-    
-  
-
-
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
@@ -159,18 +157,46 @@ export default function ProfileScreen() {
           source={{ uri: photo }} 
         />
       </View>
+      <TouchableOpacity style = {styles.buttonContainer} onPress = {() => {getCameraPermission()}}>
+                    <Text style = {{color:'white'}}>Edit Name</Text>
+        </TouchableOpacity> 
       <View style={styles.profileContainer}>
-        <Text style={styles.name}>{fname}</Text>
-        <Text style={styles.name}>{sname}</Text>
-        <Text style={styles.name}>{email}</Text>
-        <TouchableOpacity style = {styles.buttonContainer} onPress={combinelogout}>
-                    <Text style = {{color:'white'}}>Log out</Text>
-        </TouchableOpacity>   
-        <TouchableOpacity style = {styles.buttonContainer} onPress = {() => navigation.navigate('Blocked')}>
-                    <Text style = {{color:'white'}}>Show Blocked Users</Text>
-        </TouchableOpacity>   
-        <TouchableOpacity style = {styles.buttonContainer} onPress = {() => navigation.navigate('Edit Profile')}>
-                    <Text style = {{color:'white'}}>Edit Profile</Text>
+      <TextInput
+        style = {styles.input} 
+        placeholderTextColor= "grey"
+        placeholder={fname}
+        onChangeText={setfname}
+        />
+        <TouchableOpacity style = {styles.buttonContainer} onPress = {() => {let jsonFname = {'first_name':fname};patchHandler(jsonFname)}}>
+                    <Text style = {{color:'white'}}>Edit Name</Text>
+        </TouchableOpacity> 
+        <TextInput
+        style = {styles.input} 
+        placeholderTextColor= "grey"
+        placeholder={sname}
+        onChangeText={setsname}
+        />
+        <TouchableOpacity style = {styles.buttonContainer} onPress = {() => {let jsonSname= {'last_name':sname};patchHandler(jsonSname)}}>
+                    <Text style = {{color:'white'}}>Edit Last Name</Text>
+        </TouchableOpacity> 
+        <TextInput
+        style = {styles.input} 
+        placeholderTextColor= "grey"
+        placeholder={email}
+        onChangeText={setEmail}
+        />
+        <TouchableOpacity style = {styles.buttonContainer} onPress = {() => {let jsonEmail = {'email':email};patchHandler(jsonEmail)}}>
+                    <Text style = {{color:'white'}}>Edit Email</Text>
+        </TouchableOpacity> 
+        <TextInput
+        style = {styles.input} 
+        placeholderTextColor= "grey"
+        placeholder={'password'}
+        onChangeText={setPass}
+        secureTextEntry={true}
+        />
+        <TouchableOpacity style = {styles.buttonContainer} onPress = {() => {let jsonEmail = {'password':pass};patchHandler(jsonEmail)}}>
+                    <Text style = {{color:'white'}}>Edit Password</Text>
         </TouchableOpacity> 
       </View>
       
@@ -228,5 +254,14 @@ export default function ProfileScreen() {
       borderRadius:4,
       backgroundColor:'#075E54'
     },
+    input: {
+        fontSize: 20,
+        borderRadius: 50,
+        borderWidth: StyleSheet.hairlineWidth,
+        padding:10,
+        marginBottom:5,
+        height:25,
+        borderColor: "lightgray",
+        backgroundColor:'white'
+    },
   });
-  

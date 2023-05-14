@@ -22,7 +22,7 @@ export default function ContactsScreen() {
     } 
 
     const loadContacts = () => {
-        return fetch('http://localhost:3333/api/1.0.0/contacts',{
+      return fetch('http://localhost:3333/api/1.0.0/contacts',{
       method:'get',
       headers:{
         'X-authorization': token
@@ -47,6 +47,8 @@ export default function ContactsScreen() {
       console.log(err)
     })
     }
+
+    
 
     useEffect(() => {
         LoadTokenID()
