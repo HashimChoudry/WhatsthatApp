@@ -192,7 +192,6 @@ export default function ProfileScreen() {
       borderRadius: 10,
       padding: 20,
     },
-
     imageContainer: {
       width: 80,
       height: 80,

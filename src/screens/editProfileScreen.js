@@ -157,8 +157,8 @@ export default function EditProfileScreen() {
           source={{ uri: photo }} 
         />
       </View>
-      <TouchableOpacity style = {styles.buttonContainer} onPress = {() => {getCameraPermission()}}>
-                    <Text style = {{color:'white'}}>Edit Name</Text>
+      <TouchableOpacity style = {styles.buttonContainer} onPress = {() => {navigation.navigate('Camera')}}>
+                    <Text style = {{color:'white'}}>Edit Profile picture</Text>
         </TouchableOpacity> 
       <View style={styles.profileContainer}>
       <TextInput
@@ -218,7 +218,6 @@ export default function EditProfileScreen() {
       borderRadius: 10,
       padding: 20,
     },
-
     imageContainer: {
       width: 80,
       height: 80,

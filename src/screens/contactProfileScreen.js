@@ -148,46 +148,6 @@ export default function ContactProfileScreen() {
       })
   }
 
-  const newChat = (name) => {
-    if (name !== ''){
-      let jsonName = {
-        "name": name
-      }
-      jsonName = JSON.stringify(jsonName)
-      return fetch('http://localhost:3333/api/1.0.0/chat', {
-        method:'post',
-        headers:{
-          'X-authorization': token,
-          'Content-Type': 'application/json',
-        },
-        body:jsonName
-      }).then((response) =>{
-        if(response.status === 201){
-          return response.json
-        }else if (response.status === 400){
-          throw 'Bad Request'
-        }else if(response === 401){
-          throw 'unauthorized'
-        }else if(response === 500){
-          throw 'server error'
-        }
-      }).then ((rjson) => {
-        consosole.warn('created lol')
-      }).catch((err) => {
-        console,log(err)
-      })
-    }
-
-  }
-
-  const createNewChatHandler = (name) => {
-    newChat(name)
-    setModalVisible(false)
-    navigation.navigate('main')
-  }
-
-
-
   const removeHandler = () => {
     removeContact();
     navigation.navigate('main');
@@ -221,41 +181,14 @@ export default function ContactProfileScreen() {
         <Text style={styles.name}>{fname}</Text>
         <Text style={styles.name}>{sname}</Text>
         <Text style={styles.name}>{email}</Text>
-        <TouchableOpacity style = {styles.buttonContainer} onPress={() => {setModalVisible(true)}}>
-                    <Text style = {{color:'white'}}>Create Chat</Text>
-        </TouchableOpacity> 
-
         <TouchableOpacity style = {styles.buttonContainer} onPress={() => {blockHandler()}}>
                         <Text style = {{color:'white'}}>Block User</Text>
         </TouchableOpacity> 
 
         <TouchableOpacity style = {styles.buttonContainer} onPress={() => {removeHandler()}}>
-                        <Text style = {{color:'white'}}>Remove User</Text>
+                        <Text style = {{color:'white'}}>Remove Contact</Text>
         </TouchableOpacity> 
       </View>
-      <Modal
-        transparent = {true}
-        visible = {modalVisible}
-        animationType = {"fade"}
-      >
-        <View style = {styles.modalContainer}>
-          <View style = {styles.modalContent}>
-            <TextInput
-            style = {styles.input}
-            placeholder="Enter Chat Name..."
-            placeholderTextColor={'grey'}
-            value = {chatName}
-            onChangeText={setChatName}
-            />
-            <TouchableHighlight style = {styles.buttonContainer} onPress={()=>{createNewChatHandler(chatName)}}>
-              <Text style = {{color:'white'}}>Create Chat</Text>
-            </TouchableHighlight>
-            <TouchableHighlight style = {styles.buttonContainer} onPress={()=>{setModalVisible(false)}}>
-              <Text style = {{color:'white'}}>Go Away</Text>
-            </TouchableHighlight>
-          </View>
-        </View>
-      </Modal>
     </View>
 
     
