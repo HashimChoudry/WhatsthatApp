@@ -41,6 +41,7 @@ export default function ContactsScreen() {
     })
     .then((rjson) => {
       setUserData(rjson)
+      console.warn(rjson)
       console.log("user data Loaded")
     })
     .catch((err) => {

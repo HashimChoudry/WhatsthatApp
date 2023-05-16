@@ -102,6 +102,28 @@ export default function TextScreen (){
         }
     }
 
+    const makeDraft = async () => {
+        if (message !== ''){    
+            const draftObject = {
+                chat_id: chatId,
+                chat_name:chatData.name,
+                message: message,
+            }
+            try {
+                const draftArr = await AsyncStorage.getItem('Drafts');
+                let newArr = [];
+                if (draftArr){
+                    newArr = JSON.parse(draftArr)
+                }
+                newArr.push(draftObject)
+                await AsyncStorage.setItem('Drafts', JSON.stringify(newArr))
+                setMessage('')
+            } catch (err) {
+                console.log(err)
+            }
+        }
+    }
+
     const sendHandler = () => {
         setMessage('');
         sendMessage(message);
@@ -159,6 +181,12 @@ export default function TextScreen (){
                 inverted
                 />
                  <View style = {styles.container}>
+                    <AntDesign
+                    name='plus'
+                    size={20}
+                    color={'royalblue'}
+                    onPress={()=>{makeDraft()}}
+                    />
                     <TextInput
                     style = {styles.input}
                     placeholderTextColor={"white"}
@@ -176,8 +204,6 @@ export default function TextScreen (){
                 </View>
             </ImageBackground>
         </KeyboardAvoidingView>
-
-
     );
 };
 

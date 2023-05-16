@@ -10,7 +10,7 @@ import { Pressable } from "react-native";
 import { Modal, TouchableOpacity, TouchableHighlight } from "react-native-web";
 import { TextInput } from "react-native-web";
 
-export default function Message({messages, messageDeleted, messageEdited}) {
+export default function Message({messages, messageDeleted}) {
     const [token, setToken] = useState()
     const [userId, setUserId] = useState(0)
     const [chatId, setChatId] = useState(0)

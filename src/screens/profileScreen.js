@@ -172,6 +172,9 @@ export default function ProfileScreen() {
         <TouchableOpacity style = {styles.buttonContainer} onPress = {() => navigation.navigate('Edit Profile')}>
                     <Text style = {{color:'white'}}>Edit Profile</Text>
         </TouchableOpacity> 
+        <TouchableOpacity style = {styles.buttonContainer} onPress = {() => navigation.navigate('Drafts')}>
+                    <Text style = {{color:'white'}}>See Drafts</Text>
+        </TouchableOpacity> 
       </View>
       
     </View>

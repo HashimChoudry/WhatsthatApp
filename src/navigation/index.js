@@ -17,6 +17,7 @@ import SearchProfileScreen from '../screens/searchProfileScreen';
 import EditChatScreen from '../screens/editChatScreen';
 import EditProfileScreen from '../screens/editProfileScreen';
 import CameraScreen from '../screens/cameraScreen';
+import DraftScreen from '../screens/draftScreen';
 
 
 const stack = createNativeStackNavigator(
@@ -136,8 +137,17 @@ const Navigator =() =>{
               headerTintColor:"white",
               }}
             />
-            
-
+            <stack.Screen 
+            name = 'Drafts'
+            component={DraftScreen}
+            options={{ 
+              headerTitleAlign:"center",
+              headerStyle:{backgroundColor:"black"},
+              headerTitleStyle:{color:"white"},
+              headerShadowVisible:false,
+              headerTintColor:"white",
+              }}
+            />
         </stack.Navigator>
     </NavigationContainer>
   )

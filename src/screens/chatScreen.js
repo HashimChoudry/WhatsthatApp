@@ -2,11 +2,10 @@ import { View, Text, FlatList, StyleSheet, TouchableOpacity, TextInput, Touchabl
 import ListItem from "../components/chatListItem";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Component } from "react";
 import { useState, useEffect } from "react";
 import React from "react";
 import { useFocusEffect } from "@react-navigation/native";
-import { Modal } from "react-native-web";
+import { Modal } from "react-native";
 
 
 export default function ChatScreen (){
@@ -102,7 +101,7 @@ export default function ChatScreen (){
 
     useEffect(() => {
         LoadTokenID();
-    },[])
+    }, [])
 
     useFocusEffect(
         React.useCallback(() => {
