@@ -1,4 +1,5 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import { Ionicons } from '@expo/vector-icons'
 
 import ChatScreen from '../screens/chatScreen';
 import ContactsScreen from "../screens/contactsScreen";
@@ -10,7 +11,17 @@ const Tab = createBottomTabNavigator();
 
 const TabNavigator = () =>{
     return(
-        <Tab.Navigator initialRouteName = 'Chat' activeBackgroundcolor = 'black'>
+        <Tab.Navigator 
+        screenOptions={{
+            tabBarStyle: {
+              paddingHorizontal: 5,
+              paddingTop: 0,
+              backgroundColor: 'black',
+              position: 'absolute',
+              borderTopWidth: 0,
+          },
+        }} 
+        initialRouteName = 'Chat' >
             <Tab.Screen 
             name = 'contacts'
             component = {ContactsScreen}
@@ -21,6 +32,9 @@ const TabNavigator = () =>{
                 headerTitleStyle:{color:"white"},
                 headerShadowVisible:false,
                 headerLeft:null,
+                tabBarIcon:({color,size})=>(
+                    <Ionicons name='body-sharp' size={size} color={color} />
+                )
                 }}
             />
             <Tab.Screen 
@@ -33,9 +47,12 @@ const TabNavigator = () =>{
               headerTitleStyle:{color:"white"},
               headerShadowVisible:false,
               headerLeft:null,
+              tabBarIcon:({color,size})=>(
+                <Ionicons name='ios-chatbubbles-sharp' size={size} color={color} />
+            )
               }}/> 
             <Tab.Screen
-            name = 'profile'
+            name = 'Profile'
             component = {ProfileScreen}
             options={{
                 title: "Profile", 
@@ -44,6 +61,9 @@ const TabNavigator = () =>{
                 headerTitleStyle:{color:"white"},
                 headerShadowVisible:false,
                 headerLeft:null,
+                tabBarIcon:({color,size})=>(
+                    <Ionicons name='logo-whatsapp' size={size} color={color} />
+                )
                 }}
             />
             <Tab.Screen 
@@ -56,6 +76,9 @@ const TabNavigator = () =>{
                 headerTitleStyle:{color:"white"},
                 headerShadowVisible:false,
                 headerLeft:null,
+                tabBarIcon:({color,size})=>(
+                    <Ionicons name='search' size={size} color={color} />
+                )
                 }}
             />
               
