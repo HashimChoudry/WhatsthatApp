@@ -1,92 +1,57 @@
-import { Text, View, Image, StyleSheet, Pressable, FlatList} from "react-native";
-import { useEffect, useState } from "react";
-import React from "react";
-import { useFocusEffect } from "@react-navigation/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import BlockedItem from "../components/BlockedListItem";
-
+/* eslint-disable react/jsx-filename-extension */
+/* eslint-disable consistent-return */
+import { FlatList } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import BlockedItem from '../components/BlockedListItem';
 
 export default function BlockedScreen() {
-    const [userData, setUserData] = useState('')
-    const [token, setToken] = useState("")
+  const [userData, setUserData] = useState('');
+  const [token, setToken] = useState('');
 
-    const LoadTokenID = () =>{
-        AsyncStorage.getItem('whatsthat_session_token').then(data => {
-            if(data !== null){
-                setToken(data)
-            }
-        }).catch(
-            (error) => console.log(error)
-        )
-    } 
-
-    const loadBlocked = () => {
-        return fetch('http://localhost:3333/api/1.0.0/blocked',{
-      method:'get',
-      headers:{
-        'X-authorization': token
+  const LoadTokenID = () => {
+    AsyncStorage.getItem('whatsthat_session_token').then((data) => {
+      if (data !== null) {
+        setToken(data);
       }
-    })
+    }).catch(
+      (error) => (error),
+    );
+  };
+
+  const loadBlocked = () => fetch('http://localhost:3333/api/1.0.0/blocked', {
+    method: 'get',
+    headers: {
+      'X-authorization': token,
+    },
+  })
     .then((response) => {
-      if(response.status === 200){
-        return response.json()
-      } else if(response.status === 401){
-        throw '	Unauthorised'
-      }else if(response.status === 404){
-        throw 'Not Found'
-      }else if(response.status === 500){
-        throw 'Server Error'
+      if (response.status === 200) {
+        return response.json();
       }
     })
     .then((rjson) => {
-      setUserData(rjson)
-      console.log("user data Loaded")
+      setUserData(rjson);
+      return ('user data Loaded');
     })
-    .catch((err) => {
-      console.log(err)
-    })
-    }
+    .catch((err) => (err));
 
-    useEffect(() => {
-        LoadTokenID()
-      },[])
+  useEffect(() => {
+    LoadTokenID();
+  }, []);
 
+  useFocusEffect(
+    React.useCallback(() => {
+      loadBlocked();
+    }, [token]),
+  );
 
-    useFocusEffect(
-      React.useCallback(() => {
-        loadBlocked();
-      },[token])
-      )
-
-    return (
-        <FlatList style = {{backgroundColor: 'black'}}
-        data = {userData}
-        renderItem = {({item}) => <BlockedItem contact = {item} />}
-        />
-    );
+  return (
+    <FlatList
+      style={{ backgroundColor: 'black' }}
+      data={userData}
+      renderItem={({ item }) => <BlockedItem contact={item} />}
+    />
+  );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-      },
-      name: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        marginBottom: 8,
-      },
-      email: {
-        fontSize: 16,
-        marginBottom: 8,
-      },
-      phone: {
-        fontSize: 16,
-      },
-      loading: {
-        fontSize: 16,
-        fontStyle: 'italic',
-      },
-  });
-  

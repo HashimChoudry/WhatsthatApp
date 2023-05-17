@@ -1,11 +1,12 @@
 /* eslint-disable no-use-before-define */
 /* eslint-disable react/react-in-jsx-scope */
 import {
-  View, Text, Image, StyleSheet, TouchableOpacity,
+  View, Text, Image, TouchableOpacity,
 } from 'react-native';
 import { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import styles from '../styles/styles';
 
 export default function BlockedProfileScreen() {
   const [token, setToken] = useState('');
@@ -96,7 +97,7 @@ export default function BlockedProfileScreen() {
 
   return (
     // eslint-disable-next-line react/jsx-filename-extension
-    <View style={styles.container}>
+    <View style={styles.sProfileContainer}>
       <View style={styles.imageContainer}>
         <Image
           style={styles.image}
@@ -107,60 +108,13 @@ export default function BlockedProfileScreen() {
         <Text style={styles.name}>{fname}</Text>
         <Text style={styles.name}>{sname}</Text>
         <Text style={styles.name}>{email}</Text>
-        <TouchableOpacity style={styles.buttonContainer} onPress={() => { UnblockHandler(); }}>
+        <TouchableOpacity
+          style={styles.sProfileButtonContainer}
+          onPress={() => { UnblockHandler(); }}
+        >
           <Text style={{ color: 'white' }}>Unblock User</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
 }
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'black',
-  },
-  profileContainer: {
-    flexDirection: 'column',
-    alignItems: 'center',
-    backgroundColor: '#2e2e2d',
-    borderRadius: 10,
-    padding: 20,
-  },
-  imageContainer: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    overflow: 'hidden',
-    marginBottom: 20,
-  },
-  image: {
-    flex: 1,
-    width: null,
-    height: null,
-  },
-  infoContainer: {
-    alignItems: 'center',
-  },
-  name: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 5,
-    color: 'white',
-  },
-  status: {
-    fontSize: 18,
-    color: '#777',
-  },
-  buttonContainer: {
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    paddingVertical: 12,
-    paddingHorizontal: 42,
-    marginTop: 10,
-    marginBottom: 10,
-    borderRadius: 4,
-    backgroundColor: '#075E54',
-  },
-});

@@ -4,20 +4,16 @@
 import { Camera, CameraType } from 'expo-camera';
 import { useEffect, useState } from 'react';
 import {
-  StyleSheet, Text, TouchableOpacity, View,
+  Text, TouchableOpacity, View,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import styles from '../styles/styles';
 
 export default function CameraScreen() {
-  const [type, setType] = useState(CameraType.front);
   const [permission, getPermission] = Camera.useCameraPermissions();
   const [camera, setCamera] = useState(null);
   const [token, setToken] = useState(null);
   const [userID, setUserID] = useState(null);
-
-  function toggleCamera() {
-    setType((current) => (current === CameraType.front ? CameraType.back : CameraType.front));
-  }
 
   async function sendPicture(data) {
     const res = await fetch(data.uri);
@@ -65,13 +61,13 @@ export default function CameraScreen() {
     return (<Text>No permission sad</Text>);
   }
   return (
-    <View style={styles.container}>
-      <Camera style={styles.camera} type={type} ref={(ref) => setCamera(ref)}>
+    <View style={styles.cameraContainer}>
+      <Camera style={styles.camera} type={CameraType.front} ref={(ref) => setCamera(ref)}>
         <View>
-          <TouchableOpacity style={styles.buttonContainer} onPress={() => { toggleCamera(); }}>
-            <Text style={{ color: 'white' }}>change toggle</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.buttonContainer} onPress={() => { takePicture(); }}>
+          <TouchableOpacity
+            style={styles.sProfileButtonContainer}
+            onPress={() => { takePicture(); }}
+          >
             <Text style={{ color: 'white' }}>take pic</Text>
           </TouchableOpacity>
         </View>
@@ -79,28 +75,3 @@ export default function CameraScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  buttonContainer: {
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    paddingVertical: 12,
-    paddingHorizontal: 42,
-    marginTop: 10,
-    marginBottom: 10,
-    borderRadius: 4,
-    backgroundColor: '#075E54',
-    alignSelf: 'flex-end',
-  },
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    backgroundColor: 'black',
-  },
-  camera: {
-    width: '80%',
-    height: '80%',
-    aspectRatio: 2,
-    justifyContent: 'flex-end',
-  },
-});
